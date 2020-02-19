@@ -19,9 +19,12 @@ export default {
       const key = this.attributeTranslation.get(currentItem.name)
         || currentItem.name;
       if (!acc[key]) {
-        acc[key] = [];
+        acc[key] = {
+          name: currentItem.name,
+          values: [],
+        };
       }
-      acc[key].push(currentItem.value || currentItem.label);
+      acc[key].values.push(currentItem.value || currentItem.label);
       return acc;
     },
   },
@@ -103,7 +106,7 @@ export default {
       query: gql`
         query Translation($locale: Locale!, $type:String!) {
           productType(key:$type) {
-            attributeDefinitions(includeNames:["size","color"]) {
+            attributeDefinitions {
               results {
                 name
                 label(locale:$locale)
