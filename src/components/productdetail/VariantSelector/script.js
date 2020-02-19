@@ -12,13 +12,16 @@ export default {
   },
   data: () => ({
     product: null,
+    attributeTranslation: null,
   }),
   methods: {
     groupValuesByAttribute(acc, currentItem) {
-      if (!acc[currentItem.name]) {
-        acc[currentItem.name] = [];
+      const key = this.attributeTranslation.get(currentItem.name)
+        || currentItem.name;
+      if (!acc[key]) {
+        acc[key] = [];
       }
-      acc[currentItem.name].push(currentItem.value || currentItem.label);
+      acc[key].push(currentItem.value || currentItem.label);
       return acc;
     },
   },
@@ -93,6 +96,33 @@ export default {
         return {
           locale: this.$i18n.locale,
           sku: this.sku,
+        };
+      },
+    },
+    attributeName: {
+      query: gql`
+        query Translation($locale: Locale!, $type:String!) {
+          productType(key:$type) {
+            attributeDefinitions(includeNames:["size","color"]) {
+              results {
+                name
+                label(locale:$locale)
+              }
+            }
+          }
+        }`,
+      manual: true,
+      result({ data, loading }) {
+        if (!loading) {
+          this.attributeTranslation = data.productType.attributeDefinitions.results.reduce(
+            (result, item) => result.set(item.name, item.label), new Map(),
+          );
+        }
+      },
+      variables() {
+        return {
+          locale: this.$i18n.locale,
+          type: 'main',
         };
       },
     },
