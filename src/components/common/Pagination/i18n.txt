@@ -1,9 +1,6 @@
-en:
-  page: Page
-  of: of
-de:
-  page: Seite
-  of: von
-jp:
-  page: ページ
-  of: の
+  en:
+    page: "Page"
+    of: "of"
+  de:
+    page: "Seite"
+    of: "von"
