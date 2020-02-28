@@ -50,7 +50,7 @@ const products = {
             ...config.facetSearches.map(
               ({ name, type }) => [
                 'facet',
-                asAttribute(name, type),
+                `${asAttribute(name, type)} counting products`,
               ],
             ),
           ],
