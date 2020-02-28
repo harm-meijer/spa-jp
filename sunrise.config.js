@@ -1,17 +1,16 @@
 export default {
   ct: {
     auth: {
-      host: process.env.VUE_APP_CT_AUTH_HOST || 'https://auth.sphere.io',
-      projectKey: process.env.VUE_APP_CT_PROJECT_KEY || 'sunrise-spa',
+      host: 'https://auth.europe-west1.gcp.commercetools.com',
+      projectKey: 'harm-sandbox-3',
       credentials: {
-        clientId: process.env.VUE_APP_CT_CLIENT_ID || 'jFVHj0-tO-THQt9evnGTJ2fD',
-        clientSecret: process.env.VUE_APP_CT_CLIENT_SECRET || 'eUQgmtanysDpYxlOePOhcFklrwa5X8Sj',
+        clientId: 'tf9yTOHqKOWre2IPKu6pSFy2',
+        clientSecret: 'H2Lh98vHFj302357STXQjhATBHWIHaKr',
       },
-      scopes: [process.env.VUE_APP_CT_SCOPE || 'manage_my_profile:sunrise-spa create_anonymous_token:sunrise-spa'
-      + ' manage_my_payments:sunrise-spa view_products:sunrise-spa manage_my_orders:sunrise-spa'
-      + ' manage_my_shopping_lists:sunrise-spa'],
+      // eslint-disable-next-line max-len
+      scopes: ['manage_my_shopping_lists:harm-sandbox-3 manage_my_profile:harm-sandbox-3 manage_my_payments:harm-sandbox-3 create_anonymous_token:harm-sandbox-3 manage_my_orders:harm-sandbox-3 view_products:harm-sandbox-3 view_published_products:harm-sandbox-3'],
     },
-    api: process.env.VUE_APP_CT_API_HOST || 'https://api.sphere.io',
+    api: 'https://api.europe-west1.gcp.commercetools.com',
   },
   languages: {
     en: 'English',
