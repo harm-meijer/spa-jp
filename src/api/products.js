@@ -39,7 +39,10 @@ const setCategory = ({ category, ...query }) => (category
 
 const products = {
   get: withToken(
-    (query, routeQuery, { access_token: accessToken }) => {
+    (
+      [query, routeQuery, totalFacets = []],
+      { access_token: accessToken },
+    ) => {
       query = setCategory(query);
       return groupFetchJson(
         toUrl(
@@ -47,7 +50,7 @@ const products = {
           [
             ...Object.entries(query),
             ...Object.entries(facets(routeQuery)),
-            ...config.facetSearches.map(
+            ...totalFacets.map(
               ({ name, type }) => [
                 'facet',
                 `${asAttribute(name, type)} counting products`,
@@ -60,11 +63,17 @@ const products = {
         ({ facets, ...result }) => ({
           ...result,
           facets: config.facetSearches.map(
-            ({ name, type }) => ({
-              ...facets[asAttribute(name, type)],
-              name,
-              type,
-            }),
+            ({ name, type }) => {
+              const facet = facets[asAttribute(name, type)];
+              return ({
+                ...facet,
+                name,
+                type,
+                terms: [...(facet?.terms || [])].sort(
+                  (a, b) => a.term.localeCompare(b.term),
+                ),
+              });
+            },
           ),
         }),
       );
@@ -81,7 +90,13 @@ const products = {
         ({ name }) => {
           const newRouteQuery = { ...routeQuery };
           delete newRouteQuery[name];
-          return products.get(query, newRouteQuery)
+          return products.get([
+            query,
+            newRouteQuery,
+            config.facetSearches.filter(
+              f => f.name === name,
+            ),
+          ])
             .then(
               ({ facets }) => facets
                 .find(f => f.name === name),

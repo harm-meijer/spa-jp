@@ -77,7 +77,7 @@ const getProducts = (component) => {
     : {};
   last(
     Promise.all([
-      products.get(
+      products.get([
         {
           category,
           page: Number(route.params?.page || 1),
@@ -86,7 +86,7 @@ const getProducts = (component) => {
           ...searchText,
         },
         route.query,
-      ),
+      ]),
       products.facets(
         {
           category,
