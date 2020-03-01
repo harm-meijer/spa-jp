@@ -4,6 +4,7 @@ import {
   withToken, groupFetchJson, makeConfig, toUrl, baseUrl,
 } from './api';
 import config from '../../sunrise.config';
+import productTypes from './productTypes';
 
 const asAttribute = (name, type) => (['enum', 'lnum'].includes(type)
   ? `variants.attributes.${name}.key`
@@ -44,6 +45,10 @@ const products = {
       { access_token: accessToken },
     ) => {
       query = setCategory(query);
+      productTypes.translations().then(
+        // eslint-disable-next-line no-console
+        translation => console.log(translation),
+      );
       return groupFetchJson(
         toUrl(
           `${baseUrl}/product-projections/search`,
