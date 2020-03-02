@@ -92,7 +92,7 @@ const products = {
       );
     },
   ),
-  facets: (query, routeQuery) => {
+  facets: (query, routeQuery, locale) => {
     query = {
       ...setCategory(query),
       page: 1,
@@ -106,6 +106,7 @@ const products = {
           return products.get([
             query,
             newRouteQuery,
+            locale,
             config.facetSearches.filter(
               f => f.name === name,
             ),
