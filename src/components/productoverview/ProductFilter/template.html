@@ -13,11 +13,14 @@
         <hr class="hr">
         <div class="row facet-block">
           <div class="col-xs-8 text-left">
-            {{facet.name}}
+           {{facet.label}}
           </div>
           <div class="col-xs-4">
-            <a class="text-right clear-btn facet-clear-btn" href="#">
-              {{ $t("clear") }}
+            <a 
+              class="text-right clear-btn facet-clear-btn" 
+              href="#"
+              v-on:click.prevent="clearFacet(facet.name)">
+                {{ $t("clear") }}
             </a>
           </div>
         </div>
@@ -26,9 +29,13 @@
             <div class="pop-filter-select select-facet two-column-select">
               <div v-for="term in facet.terms">
                 <label>
-                  <input type="checkbox" :name="facet.name" :value="term.term"
-                    :checked="isChecked(facet.name,term.term)" v-on:change="filerChange($event, facet.name)" />
-                  {{term.term}} <span class="facet-count">({{term.productCount}})</span>
+                  <input 
+                    type="checkbox" 
+                    :name="facet.name" 
+                    :value="term.term"
+                    :checked="isChecked(facet.name,term.term)" 
+                    v-on:change="filterChange($event, facet.name)" />
+                  {{term.label}} <span class="facet-count">({{term.productCount}})</span>
                 </label>
               </div>
             </div>
