@@ -29,7 +29,7 @@
                   <input 
                     type="checkbox" 
                     :name="facet.name" 
-                    :value="term.name"
+                    :value="term.term"
                     :checked="isChecked(facet.name,term.term)" 
                     v-on:change="filerChange($event, facet.name)" />
                   {{term.label}} <span class="facet-count">({{term.productCount}})</span>

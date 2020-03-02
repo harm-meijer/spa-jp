@@ -153,11 +153,6 @@ export default {
     category() {
       return this.categories.results[0];
     },
-    locale() {
-      // eslint-disable-next-line no-console
-      console.log('in computed:', locale(this));
-      return locale(this);
-    },
     hasManyProducts() {
       return this.products?.results.length >= this.limit / 2;
     },
@@ -208,10 +203,6 @@ export default {
     },
     categories() {
       getProducts(this);
-    },
-    locale(...args) {
-      // eslint-disable-next-line no-console
-      console.log('locale changed', args);
     },
   },
 };
