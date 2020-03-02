@@ -16,8 +16,11 @@
            {{facet.label}}
           </div>
           <div class="col-xs-4">
-            <a class="text-right clear-btn facet-clear-btn" href="#">
-              {{ $t("clear") }}
+            <a 
+              class="text-right clear-btn facet-clear-btn" 
+              href="#"
+              v-on:click.prevent="clearFacet(facet.name)">
+                {{ $t("clear") }}
             </a>
           </div>
         </div>
@@ -31,7 +34,7 @@
                     :name="facet.name" 
                     :value="term.term"
                     :checked="isChecked(facet.name,term.term)" 
-                    v-on:change="filerChange($event, facet.name)" />
+                    v-on:change="filterChange($event, facet.name)" />
                   {{term.label}} <span class="facet-count">({{term.productCount}})</span>
                 </label>
               </div>
