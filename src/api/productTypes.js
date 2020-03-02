@@ -1,7 +1,9 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-return-assign */
+/* eslint-disable no-param-reassign */
 import {
   withToken, groupFetchJson, makeConfig, baseUrl,
 } from './api';
-import config from '../../sunrise.config';
 
 const productTypes = {
   getItem: withToken(
@@ -11,16 +13,28 @@ const productTypes = {
     ),
   ),
   translations: () => productTypes.getItem().then(
-    productType => config.facetSearches.map(
-      ({ name }) => productType.attributes.find(
-        a => a.name === name,
-      ),
-    ).reduce(
-      (result, { name, label, type }) => ({
-        name,
-        label: label.de,
-        values: type.name === 'lenum' ? type.values : [],
-      }), new Map(),
+    productType => productType.attributes.reduce(
+      (result, { name, label, type }) => {
+        result[name] = {
+          ...label,
+        };
+        Object.entries(label).forEach(
+          ([locale, value]) => result[`${value} ... ${locale}`] = name,
+        );
+        if (type.name === 'lenum') {
+          result[name].values = type.values.reduce(
+            (result, { key, label }) => {
+              result[key] = label;
+              Object.entries(label).forEach(
+                ([locale, value]) => result[`${value} ... ${locale}`] = key,
+              );
+              return result;
+            }, {},
+          );
+        }
+
+        return result;
+      }, {},
     ),
   ),
 };

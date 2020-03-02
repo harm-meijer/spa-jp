@@ -15,7 +15,7 @@ const facets = (query = {}) => config.facetSearches
   .reduce(
     (result, { name, type }) => {
     // eslint-disable-next-line no-prototype-builtins
-      if (query.hasOwnProperty(name) && query[name] !== undefined) {
+      if (query.hasOwnProperty(name)) {
         result['filter.query'] = result['filter.query'] || [];
         result['filter.query'].push(
           `${asAttribute(name, type)}:${
@@ -41,31 +41,30 @@ const setCategory = ({ category, ...query }) => (category
 const products = {
   get: withToken(
     (
-      [query, routeQuery, totalFacets = []],
+      [query, routeQuery, locale, totalFacets = []],
       { access_token: accessToken },
     ) => {
       query = setCategory(query);
-      productTypes.translations().then(
-        // eslint-disable-next-line no-console
-        translation => console.log(translation),
-      );
-      return groupFetchJson(
-        toUrl(
-          `${baseUrl}/product-projections/search`,
-          [
-            ...Object.entries(query),
-            ...Object.entries(facets(routeQuery)),
-            ...totalFacets.map(
-              ({ name, type }) => [
-                'facet',
-                `${asAttribute(name, type)} counting products`,
-              ],
-            ),
-          ],
+      return Promise.all([
+        groupFetchJson(
+          toUrl(
+            `${baseUrl}/product-projections/search`,
+            [
+              ...Object.entries(query),
+              ...Object.entries(facets(routeQuery)),
+              ...totalFacets.map(
+                ({ name, type }) => [
+                  'facet',
+                  `${asAttribute(name, type)} counting products`,
+                ],
+              ),
+            ],
+          ),
+          makeConfig(accessToken),
         ),
-        makeConfig(accessToken),
-      ).then(
-        ({ facets, ...result }) => ({
+        productTypes.translations(),
+      ]).then(
+        ([{ facets, ...result }, translation]) => ({
           ...result,
           facets: config.facetSearches.map(
             ({ name, type }) => {
@@ -73,9 +72,18 @@ const products = {
               return ({
                 ...facet,
                 name,
+                label: translation[name]?.[locale] || name,
                 type,
                 terms: [...(facet?.terms || [])].sort(
                   (a, b) => a.term.localeCompare(b.term),
+                ).map(
+                  t => ({
+                    ...t,
+                    label:
+                        translation[name]
+                          ?.values
+                          ?.[t.term][locale] || t.term,
+                  }),
                 ),
               });
             },
